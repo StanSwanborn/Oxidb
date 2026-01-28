@@ -1,8 +1,10 @@
+use std::any::Any;
 use std::collections::HashMap;
 
 use crate::column::Column;
 use crate::schema::{ColumnType, TableSchema};
 use crate::column::typed_column::TypedColumn;
+use crate::row::row::Row;
 use crate::table::row_builder::RowBuilder;
 
 /// A table instance holding actual data.
@@ -36,16 +38,32 @@ impl Table {
         }
     }
 
-    pub fn add_row<F>(&mut self, f: F)
-    where
-        F: FnOnce(&mut RowBuilder),
+    pub fn add_row<F>(&mut self, f: F) where F: FnOnce(&mut RowBuilder),
     {
         let mut builder = RowBuilder::new(self);
         f(&mut builder);
-        builder.finish(); // mutable borrow ends here
+        builder.finish();
+
+        self.row_count += 1;
     }
 
-    pub fn get_column(&self, name: &str) -> Option<&Box<dyn Column>> {
-        self.columns.get(name)
+    /// get the row at index
+    pub fn get_row(&self, index: usize) -> Row {
+        if index >= self.row_count { panic!("Row index out of bounds"); }
+
+        let mut row = Row::new();
+        for(name, col) in &self.columns {
+            row.push_boxed_value(name.clone(), col.get_any(index));
+        }
+
+        row
+    }
+
+    pub fn get_column(&self, name: &str) -> &Box<dyn Column> {
+        self.columns.get(name).unwrap()
+    }
+
+    pub fn get_column_mut(&mut self, name: &str) -> &mut Box<dyn Column> {
+        self.columns.get_mut(name).unwrap()
     }
 }

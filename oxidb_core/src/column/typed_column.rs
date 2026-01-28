@@ -1,5 +1,4 @@
 use std::any::Any;
-use std::io::Write;
 
 use crate::column::Column;
 
@@ -25,9 +24,14 @@ impl<T: Clone + 'static> TypedColumn<T> {
         self.data.push(value);
     }
 
-    pub fn get(&self, index: usize) -> T {
-        self.data[index].clone()
-    }
+    /// Get reference at index
+    pub fn get(&self, index: usize) -> &T { &self.data[index] }
+
+    /// Get mutable clone at index
+    pub fn get_mut(&mut self, index: usize) -> T { self.data[index].clone() }
+
+    /// Set value at index
+    pub fn set(&mut self, index: usize, value: T) { self.data[index] = value; }
 }
 
 impl<T> Column for TypedColumn<T>
@@ -42,24 +46,15 @@ where
         self.data.push(self.default.clone());
     }
 
-    fn serialize(&self, writer: &mut dyn Write) {
-        // VERY naive binary serialization for now
-        // This works only for simple POD types
-        let bytes = unsafe {
-            std::slice::from_raw_parts(
-                self.data.as_ptr() as *const u8,
-                self.data.len() * std::mem::size_of::<T>(),
-            )
-        };
-
-        let _ = writer.write_all(bytes);
-    }
-
     fn as_any(&self) -> &dyn Any {
         self
     }
 
     fn as_any_mut(&mut self) -> &mut dyn Any {
         self
+    }
+
+    fn get_any(&self, index: usize) -> Box<dyn Any> {
+        Box::new(self.data[index].clone())
     }
 }

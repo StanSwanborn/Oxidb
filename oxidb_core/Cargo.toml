@@ -1,0 +1,11 @@
+[package]
+name = "oxidb_core"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "oxidb_core"
+path = "src/lib.rs"
+
+[dependencies]
+time = "0.3.46"

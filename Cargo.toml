@@ -1,11 +1,9 @@
-[package]
-name = "oxidb"
-version = "0.1.0"
-edition = "2024"
+[workspace]
+members = [
+    "oxidb_core",
+    #"oxidb_cli",
+    "oxidb_api",
+    #"oxidb_gui"
+]
 
-[lib]
-name = "oxidb"
-path = "src/lib.rs"
-
-[dependencies]
-time = "0.3.46"
+resolver = "2"

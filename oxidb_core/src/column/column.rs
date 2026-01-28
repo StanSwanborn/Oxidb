@@ -1,5 +1,4 @@
 use std::any::Any;
-use std::io::Write;
 
 /// Trait implemented by all column storage types.
 ///
@@ -14,10 +13,10 @@ pub trait Column {
     /// that doesn't specify this column)
     fn push_default(&mut self);
 
-    /// Serialize the column to disk
-    fn serialize(&self, writer: &mut dyn Write);
-
-    /// Used for downcasting (advanced, optional for now)
+    /// Used for downcasting
     fn as_any(&self) -> &dyn Any;
+
     fn as_any_mut(&mut self) -> &mut dyn Any;
+    
+    fn get_any(&self, index: usize) -> Box<dyn Any>;
 }

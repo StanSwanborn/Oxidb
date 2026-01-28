@@ -15,8 +15,8 @@ impl<'a> RowBuilder<'a> {
         }
     }
 
-    pub fn set_i64(&mut self, column: &str, value: i64) {
-        let col = self.table.columns.get_mut(column)
+    pub fn set_i64(&mut self, column_name: &str, value: i64) {
+        let col = self.table.columns.get_mut(column_name)
             .expect("Column not found");
 
         let typed = col.as_any_mut()
@@ -24,11 +24,11 @@ impl<'a> RowBuilder<'a> {
             .expect("Column type mismatch");
 
         typed.push(value);
-        self.touched.insert(column.to_string()); // HashSet works fine
+        self.touched.insert(column_name.to_string()); // HashSet works fine
     }
 
-    pub fn set_f64(&mut self, column: &str, value: f64) {
-        let col = self.table.columns.get_mut(column)
+    pub fn set_f64(&mut self, column_name: &str, value: f64) {
+        let col = self.table.columns.get_mut(column_name)
             .expect("Column not found");
 
         let typed = col.as_any_mut()
@@ -36,11 +36,11 @@ impl<'a> RowBuilder<'a> {
             .expect("Column type mismatch");
 
         typed.push(value);
-        self.touched.insert(column.to_string());
+        self.touched.insert(column_name.to_string());
     }
 
-    pub fn set_bool(&mut self, column: &str, value: bool) {
-        let col = self.table.columns.get_mut(column)
+    pub fn set_bool(&mut self, column_name: &str, value: bool) {
+        let col = self.table.columns.get_mut(column_name)
             .expect("Column not found");
 
         let typed = col.as_any_mut()
@@ -48,11 +48,11 @@ impl<'a> RowBuilder<'a> {
             .expect("Column type mismatch");
 
         typed.push(value);
-        self.touched.insert(column.to_string());
+        self.touched.insert(column_name.to_string());
     }
 
-    pub fn set_string(&mut self, column: &str, value: &str) {
-        let col = self.table.columns.get_mut(column)
+    pub fn set_string(&mut self, column_name: &str, value: &str) {
+        let col = self.table.columns.get_mut(column_name)
             .expect("Column not found");
 
         let typed = col.as_any_mut()
@@ -60,11 +60,11 @@ impl<'a> RowBuilder<'a> {
             .expect("Column type mismatch");
 
         typed.push(value.to_string());
-        self.touched.insert(column.to_string());
+        self.touched.insert(column_name.to_string());
     }
 
-    pub fn set_bytes(&mut self, column: &str, value: &[u8]) {
-        let col = self.table.columns.get_mut(column)
+    pub fn set_bytes(&mut self, column_name: &str, value: &[u8]) {
+        let col = self.table.columns.get_mut(column_name)
             .expect("Column not found");
 
         let typed = col.as_any_mut()
@@ -72,7 +72,7 @@ impl<'a> RowBuilder<'a> {
             .expect("Column type mismatch");
 
         typed.push(value.to_vec());
-        self.touched.insert(column.to_string());
+        self.touched.insert(column_name.to_string());
     }
 
     pub fn finish(self) {
