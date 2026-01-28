@@ -1,9 +1,11 @@
 use std::any::Any;
 use std::collections::HashMap;
 use crate::column::Column;
+use crate::ColumnSchema;
 
 pub struct Row {
-    pub column_values: HashMap<String, Box<dyn Any>>, // one value per column
+    pub column_schema: Vec<ColumnSchema>,
+    column_values: HashMap<String, Box<dyn Any>>, // one value per column
 }
 
 impl Row {
